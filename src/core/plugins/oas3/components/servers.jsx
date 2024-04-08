@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { OrderedMap } from "immutable"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
@@ -22,30 +22,33 @@ const Servers = ({
 
   useEffect(() => {
     if (currentServer) return
-
     // fire 'change' event to set default 'value' of select
     setSelectedServer(servers.first()?.get("url"))
   }, [])
 
   useEffect(() => {
     // server has changed, we may need to set default values
-    const currentServerDefinition = servers.find(
-      (server) => server.get("url") === currentServer
-    )
-    if (!currentServerDefinition) {
-      setSelectedServer(servers.first().get("url"))
-      return
-    }
-
-    const currentServerVariableDefs =
-      currentServerDefinition.get("variables") || OrderedMap()
-    currentServerVariableDefs.map((val, key) => {
-      setServerVariableValue({
-        server: currentServer,
-        key,
-        val: val.get("default") || "",
-      })
-    })
+    // const currentServerDefinition = servers.find(
+    //   (server) => server.get("url") === currentServer
+    // )
+    // if (!currentServerDefinition) {
+    //   setSelectedServer(servers.first().get("url"))
+    //   return
+    // }
+    // const currentServerVariableDefs =
+    //   currentServerDefinition.get("variables") || OrderedMap()
+    // currentServerVariableDefs.map((val, key) => {
+    //   setServerVariableValue({
+    //     server: currentServer,
+    //     key,
+    //     val: val.get("default") || "",
+    //   })
+    // })
+    // setServerVariableValue({
+    //   server: currentServer,
+    //   key: "server",
+    //   val: currentServer,
+    // })
   }, [currentServer, servers])
 
   const handleServerChange = useCallback(
@@ -59,7 +62,6 @@ const Servers = ({
     (e) => {
       const variableName = e.target.getAttribute("data-variable")
       const newVariableValue = e.target.value
-
       setServerVariableValue({
         server: currentServer,
         key: variableName,
@@ -71,7 +73,7 @@ const Servers = ({
 
   return (
     <div className="servers">
-      <label htmlFor="servers">
+      {/* <label htmlFor="servers">
         <select
           onChange={handleServerChange}
           value={currentServer}
@@ -87,6 +89,16 @@ const Servers = ({
             ))
             .toArray()}
         </select>
+      </label> */}
+      <label htmlFor="servers">
+        Server URL:&nbsp;
+        <input
+          type="text"
+          id="servers"
+          value={currentServer}
+          onChange={handleServerChange}
+          style={{ width: "200%", maxWidth: "200%" }}
+        />
       </label>
       {shouldShowVariableUI && (
         <div>
